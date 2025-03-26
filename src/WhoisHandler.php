@@ -28,7 +28,7 @@ class WhoisHandler {
 
 		if ( $this->whois->canLookup( $this->tld ) ) {
 			$result = $this->whois->lookup( [ 'sld' => $this->sld, 'tld' => $this->tld ] );
-			if ( !isset( $result['whois'] ) && strtolower( $result['result']) === 'available' ) {
+			if ( !isset( $result['whois'] ) && strtolower( $result['result'] ) === 'available' ) {
 				$this->whoisMessage = $domain . ' is available for registration.';
 				$this->isAvailable  = TRUE;
 			} else {
