@@ -1,5 +1,5 @@
 {
-  "name": "monovm/whois-php",
+  "name": "mmkulikov/whois-php",
   "description": "This PHP package enables developers to retrieve domain registration information and check domain availability via socket protocol. It's a useful tool for web developers and domain name registrars.",
   "type": "library",
   "keywords": [
