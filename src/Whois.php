@@ -47,7 +47,7 @@ class Whois {
 	public static function convertTld( string $tld ): string {
 		if ( preg_match( '~[^\w.-]~', $tld ) ) {
 			$tld = '.' . idn_to_ascii( substr( $tld, 1 ) );
-		} elseif ( stripos( 'xd-', $tld ) === 1 ) {
+		} elseif ( stripos( $tld, 'xn-' ) === 1 ) {
 			$tld = '.' . idn_to_utf8( substr( $tld, 1 ) );
 		}
 
@@ -155,7 +155,7 @@ class Whois {
 		}
 		$domain = $sld . $tld;
 		if ( preg_match( '~[^\w.-]~', $domain ) ) {
-			$domain = idn_to_ascii( $domain);
+			$domain = idn_to_ascii( $domain );
 		}
 
 		try {
