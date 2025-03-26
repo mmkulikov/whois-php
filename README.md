@@ -7,13 +7,6 @@ protocol. It's a useful tool for web developers and domain name registrars.
 
 based on WHMCS domain Whois class.
 
-## :scroll: Installation
-
-You can install the whois package via composer:
-
-```bash
-composer require monovm/whois-php
-```
 
 ## :arrow_forward: Checker class
 
