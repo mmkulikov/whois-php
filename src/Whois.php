@@ -44,20 +44,30 @@ class Whois {
 		return $this->socketPrefix;
 	}
 
+	private static function convertTld( string $tld ): string {
+		if ( preg_match( '~\W~', $tld ) ) {
+			$tld = '.' . idn_to_ascii( substr( $tld, 1 ) );
+		} elseif ( stripos( 'xd-', $tld ) === 0 ) {
+			$tld = '.' . idn_to_utf8( substr( $tld, 1 ) );
+		}
+
+		return $tld;
+	}
+
 	public function canLookup( $tld ): bool {
 		$hasTldInDefinitions = array_key_exists( $tld, $this->definitions );
 		if ( !$hasTldInDefinitions ) {
-			if ( preg_match( '~\W~', $tld ) ) {
-				$hasTldInDefinitions = array_key_exists( idn_to_ascii( $tld ), $this->definitions );
-			} elseif ( stripos( 'xd-', $tld ) === 0 ) {
-				$hasTldInDefinitions = array_key_exists( idn_to_utf8( $tld ), $this->definitions );
-			}
+			$hasTldInDefinitions = array_key_exists( self::convertTld( $tld ), $this->definitions );
 		}
 
 		return $hasTldInDefinitions;
 	}
 
 	public function getFromDefinitions( $tld, $key ) {
+		if ( !isset( $this->definitions[ $tld ] ) ) {
+			$tld = self::convertTld( $tld );
+		}
+
 		return $this->definitions[ $tld ][ $key ] ?? '';
 	}
 
@@ -134,6 +144,12 @@ class Whois {
 	public function lookup( $parts ) {
 		$sld = $parts['sld'];
 		$tld = $parts['tld'];
+		if ( preg_match( '~\W~', $tld ) ) {
+			$domainParts = explode( '.', idn_to_ascii( $sld . $tld ), 2 );
+
+			$sld = $domainParts[0];
+			$tld = '.' . $domainParts[1];
+		}
 
 		try {
 			$uri                  = $this->getUri( $tld );
