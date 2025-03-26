@@ -44,10 +44,10 @@ class Whois {
 		return $this->socketPrefix;
 	}
 
-	private static function convertTld( string $tld ): string {
-		if ( preg_match( '~\W~', $tld ) ) {
+	public static function convertTld( string $tld ): string {
+		if ( preg_match( '~[^\w.-]~', $tld ) ) {
 			$tld = '.' . idn_to_ascii( substr( $tld, 1 ) );
-		} elseif ( stripos( 'xd-', $tld ) === 0 ) {
+		} elseif ( stripos( 'xd-', $tld ) === 1 ) {
 			$tld = '.' . idn_to_utf8( substr( $tld, 1 ) );
 		}
 
@@ -144,12 +144,6 @@ class Whois {
 	public function lookup( $parts ) {
 		$sld = $parts['sld'];
 		$tld = $parts['tld'];
-		if ( preg_match( '~\W~', $tld ) ) {
-			$domainParts = explode( '.', idn_to_ascii( $sld . $tld ), 2 );
-
-			$sld = $domainParts[0];
-			$tld = '.' . $domainParts[1];
-		}
 
 		try {
 			$uri                  = $this->getUri( $tld );
@@ -160,6 +154,9 @@ class Whois {
 			return FALSE;
 		}
 		$domain = $sld . $tld;
+		if ( preg_match( '~[^\w.-]~', $domain ) ) {
+			$domain = idn_to_ascii( $domain);
+		}
 
 		try {
 			if ( $isSocketLookup ) {
