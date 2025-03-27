@@ -32,7 +32,13 @@ class WhoisHandler {
 				$this->whoisMessage = $domain . ' is available for registration.';
 				$this->isAvailable  = TRUE;
 			} else {
-				$this->whoisMessage = $result['whois'];
+				if ( isset( $result['whois'] ) ) {
+					$whois = $result['whois'];
+				} else {
+					$whois         = '';
+					$this->isValid = FALSE;
+				}
+				$this->whoisMessage = $whois;
 			}
 		} else {
 			$this->whoisMessage = 'Unable to lookup whois information for ' . $domain;
